@@ -1,9 +1,11 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using RunningWorks.Data;
 
 namespace RunningWorks.Data.Migrations
 {
@@ -13,7 +15,8 @@ namespace RunningWorks.Data.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.2");
+                .HasAnnotation("ProductVersion", "1.0.0-rc3")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
                 {
@@ -23,10 +26,10 @@ namespace RunningWorks.Data.Migrations
                         .IsConcurrencyToken();
 
                     b.Property<string>("Name")
-                        .HasMaxLength(256);
+                        .HasAnnotation("MaxLength", 256);
 
                     b.Property<string>("NormalizedName")
-                        .HasMaxLength(256);
+                        .HasAnnotation("MaxLength", 256);
 
                     b.HasKey("Id");
 
@@ -132,7 +135,7 @@ namespace RunningWorks.Data.Migrations
                         .IsConcurrencyToken();
 
                     b.Property<string>("Email")
-                        .HasMaxLength(256);
+                        .HasAnnotation("MaxLength", 256);
 
                     b.Property<bool>("EmailConfirmed");
 
@@ -141,10 +144,10 @@ namespace RunningWorks.Data.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256);
+                        .HasAnnotation("MaxLength", 256);
 
                     b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256);
+                        .HasAnnotation("MaxLength", 256);
 
                     b.Property<string>("PasswordHash");
 
@@ -157,7 +160,7 @@ namespace RunningWorks.Data.Migrations
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
-                        .HasMaxLength(256);
+                        .HasAnnotation("MaxLength", 256);
 
                     b.HasKey("Id");
 
