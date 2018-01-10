@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RunningWorks.Data;
+using RunningWorks.Managers;
 using RunningWorks.Services;
 
 namespace RunningWorks.Pages.Account.Manage
@@ -17,15 +18,18 @@ namespace RunningWorks.Pages.Account.Manage
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly IApplicationUserManager _applicationUserManager;
 
         public IndexModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IApplicationUserManager applicationUserManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _applicationUserManager = applicationUserManager;
         }
 
         public string Username { get; set; }
@@ -40,6 +44,14 @@ namespace RunningWorks.Pages.Account.Manage
 
         public class InputModel
         {
+            [Required]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
             [Required]
             [EmailAddress]
             public string Email { get; set; }
@@ -61,6 +73,8 @@ namespace RunningWorks.Pages.Account.Manage
 
             Input = new InputModel
             {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber
             };
@@ -81,6 +95,24 @@ namespace RunningWorks.Pages.Account.Manage
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            if (Input.FirstName != user.FirstName)
+            {
+                var setFirstNameResult = await _applicationUserManager.SetFirstNameAsync(user, Input.FirstName);
+                if (!setFirstNameResult)
+                {
+                    throw new ApplicationException($"Unexpected error occurred setting first name for user with ID '{user.Id}'.");
+                }
+            }
+
+            if (Input.LastName != user.LastName)
+            {
+                var setLastNameResult = await _applicationUserManager.SetLastNameAsync(user, Input.LastName);
+                if (!setLastNameResult)
+                {
+                    throw new ApplicationException($"Unexpected error occurred setting last name for user with ID '{user.Id}'.");
+                }
             }
 
             if (Input.Email != user.Email)

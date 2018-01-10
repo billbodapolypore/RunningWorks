@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RunningWorks.Data;
 using RunningWorks.Services;
+using RunningWorks.Managers;
+using RunningWorks.Stores;
 
 namespace RunningWorks
 {
@@ -32,6 +34,9 @@ namespace RunningWorks
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddScoped<IApplicationUserManager, ApplicationUserManager>();
+            services.AddScoped<IApplicationUserStore, ApplicationUserStore>();
 
             services.AddMvc()
                 .AddRazorPagesOptions(options =>
