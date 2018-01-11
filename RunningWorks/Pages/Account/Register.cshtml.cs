@@ -85,7 +85,7 @@ namespace RunningWorks.Pages.Account
 
             if (!reCAPTCAResult)
             {
-                ModelState.AddModelError(string.Empty, "Recaptcha Failed");
+                ModelState.AddModelError(string.Empty, "reCAPTCHA failed");
             }
 
             ReturnUrl = returnUrl;
