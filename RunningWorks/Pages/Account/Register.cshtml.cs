@@ -81,7 +81,9 @@ namespace RunningWorks.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            if (await _recaptchaService.VerifyResponse(Request.Form["g-recaptcha-response"].ToString()))
+            var reCAPTCAResult = await _recaptchaService.VerifyResponse(Request.Form["g-recaptcha-response"].ToString());
+
+            if (!reCAPTCAResult)
             {
                 ModelState.AddModelError(string.Empty, "Recaptcha Failed");
             }

@@ -7,13 +7,14 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace RunningWorks.Services
 {
     public class GoogleRecaptchaService : IRecaptchaService
     {
         // TODO: Move these to config
-        private readonly Uri _apiUri = new Uri("https://www.google.com/recaptcha/api/siteverify");
+        private readonly string _apiUri = "https://www.google.com/recaptcha/api/siteverify";
         private readonly string _siteSecret = "6LdJLkAUAAAAAFZlvixYG538KlHX6wkhc2Mbq12L";
         private readonly ILogger<GoogleRecaptchaService> _logger;
 
@@ -30,18 +31,10 @@ namespace RunningWorks.Services
                 httpClient.DefaultRequestHeaders.Accept.Clear();
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                var apiRequest = new ApiRequest() {
-                    SiteSecret = _siteSecret,
-                    ClientResponse = clientResponse
-                };
-
-                var requestJson = JsonConvert.SerializeObject(apiRequest);
-                var requestContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
-
                 try
                 {
-                    _logger.LogInformation("POST to Google Api");
-                    var httpResponse = await httpClient.PostAsync(_apiUri, requestContent);
+                    var fullUri = new Uri($"{_apiUri}?secret={_siteSecret}&response={clientResponse}");
+                    var httpResponse = await httpClient.PostAsync(fullUri, null);
 
                     if (!httpResponse.IsSuccessStatusCode)
                     {
@@ -50,14 +43,7 @@ namespace RunningWorks.Services
                     }
 
                     var responseJson = await httpResponse.Content.ReadAsStringAsync();
-
                     var apiReponse = JsonConvert.DeserializeObject<ApiResponse>(responseJson);
-
-
-                    if (!apiReponse.Success)
-                    {
-                        _logger.LogError($"requestJson: {requestJson}; responseJson: {responseJson};");
-                    }
 
                     return apiReponse.Success;
                 }
@@ -70,14 +56,6 @@ namespace RunningWorks.Services
                 // For the best user experience assume the captcha was successful
                 return true;
             }
-        }
-
-        public class ApiRequest
-        {
-            [JsonProperty(PropertyName = "secret")]
-            public string SiteSecret { get; set; }
-            [JsonProperty(PropertyName = "response")]
-            public string ClientResponse { get; set; }
         }
 
         public class ApiResponse
