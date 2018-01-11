@@ -4,6 +4,10 @@
     ViewData["Title"] = "Register";
 }
 
+@section HeadScripts {
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+}
+
 <h2>@ViewData["Title"]</h2>
 
 <div class="row">
@@ -28,6 +32,16 @@
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Input.Address"></label>
+                <input asp-for="Input.Address" class="form-control" />
+                <span asp-validation-for="Input.Address" class="text-danger"></span>
+            </div>
+            <div class="checkbox">
+                <label asp-for="Input.IsHomeless">
+                    <input asp-for="Input.IsHomeless"> Are you homeless?
+                </label>
+            </div>
+            <div class="form-group">
                 <label asp-for="Input.Password"></label>
                 <input asp-for="Input.Password" class="form-control" />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
@@ -37,6 +51,7 @@
                 <input asp-for="Input.ConfirmPassword" class="form-control" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
+            <div class="g-recaptcha" data-sitekey="6LdJLkAUAAAAAA6hdeRn2gVH_QEe1bzqR3kji4JC"></div>
             <button type="submit" class="btn btn-default">Register</button>
         </form>
     </div>

@@ -37,6 +37,7 @@ namespace RunningWorks
 
             services.AddScoped<IApplicationUserManager, ApplicationUserManager>();
             services.AddScoped<IApplicationUserStore, ApplicationUserStore>();
+            services.AddScoped<IRecaptchaService, GoogleRecaptchaService>();
 
             services.AddMvc()
                 .AddRazorPagesOptions(options =>

@@ -10,7 +10,8 @@ namespace RunningWorks.Data
     public class ApplicationUser : IdentityUser
     {
         public string FirstName { get; set; }
-
         public string LastName { get; set; }
+        public bool IsHomeless { get; set; }
+        public string Address { get; set; }
     }
 }
